@@ -31,7 +31,6 @@ export const AlertComponent: React.FC<AlertComponentProps> = ({
           variant='outline'
           colorScheme='black'
           aria-label='Close'
-          fontSize='10px'
           ml={2}
           icon={<CloseIcon />}
         />
