@@ -27,7 +27,7 @@ const Form = styled.form`
   gap: 1rem;
 `;
 
-const RedirectToLogin = styled.span`
+export const RedirectLink = styled.span`
   color: #007bff;
   font-weight: bold;
   cursor: pointer;
@@ -157,7 +157,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
       </Form>
       <div>
         <span>Already have an account? </span>
-        <RedirectToLogin onClick={redirectToLogin}>Login here</RedirectToLogin>
+        <RedirectLink onClick={redirectToLogin}>Login here</RedirectLink>
       </div>
     </>
   );

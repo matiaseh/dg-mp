@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../constants/apiConstants';
+import { RedirectLink } from './RegistrationForm';
 
 const VerifyEmail = () => {
   const { token } = useParams<{ token: string }>(); // Get the token from the URL
   const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const verifyEmail = async () => {
       try {
@@ -24,7 +27,16 @@ const VerifyEmail = () => {
   return (
     <div>
       <h1>Email Verification</h1>
-      {message && <p>{message}</p>}
+      <div>
+        {message && <p>{message}</p>}
+        <RedirectLink
+          onClick={() => {
+            navigate('/login');
+          }}
+        >
+          Login here
+        </RedirectLink>
+      </div>
     </div>
   );
 };
