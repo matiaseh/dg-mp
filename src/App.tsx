@@ -77,10 +77,12 @@ const App: React.FC = () => {
                 element={<VerifyEmail updateTitle={updateTitle} />}
               />
             </Routes>
-            <AlertComponent
-              errorMessage={errorMessage}
-              hideError={updateErrorMessage}
-            />
+            {errorMessage && (
+              <AlertComponent
+                errorMessage={errorMessage}
+                updateErrorMessage={updateErrorMessage}
+              />
+            )}
           </Content>
         </Container>
       </Router>
