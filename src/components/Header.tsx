@@ -15,6 +15,8 @@ const Header = ({ title }: HeaderProps): JSX.Element => {
   let pageTitle = capitalize(location.pathname.substring(1));
   if (location.pathname === '/') {
     pageTitle = 'Welcome';
+  } else if (location.pathname.includes('verify')) {
+    pageTitle = 'Verify';
   }
 
   const handleLogout = () => {

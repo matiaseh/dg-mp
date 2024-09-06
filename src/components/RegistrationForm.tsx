@@ -74,7 +74,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             ...prevState,
           }));
           localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
-          redirectToHome();
+          redirectToLogin();
           showError(null);
         } else {
           showError('Some error occurred');
@@ -88,11 +88,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     } else {
       showError('Please enter a valid username and password');
     }
-  };
-
-  const redirectToHome = () => {
-    updateTitle('Home');
-    navigate('/home');
   };
 
   const redirectToLogin = () => {

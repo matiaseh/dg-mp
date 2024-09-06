@@ -72,7 +72,10 @@ const App: React.FC = () => {
                   </PrivateRoute>
                 }
               />
-              <Route path='/verify/:token' element={<VerifyEmail />} />
+              <Route
+                path='/verify/:token'
+                element={<VerifyEmail updateTitle={updateTitle} />}
+              />
             </Routes>
             <AlertComponent
               errorMessage={errorMessage}
