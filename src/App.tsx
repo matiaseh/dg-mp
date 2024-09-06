@@ -1,35 +1,88 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
+import LoginForm from './components/LoginForm';
+import RegistrationForm from './components/RegistrationForm';
+import Home from './components/Home';
+import PrivateRoute from './utils/PrivateRoute';
+import AlertComponent from './components/AlertComponent';
+import styled from '@emotion/styled';
+import { ChakraProvider } from '@chakra-ui/react';
+import VerifyEmail from './components/VerifyEmail';
 import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0);
+const Container = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const Content = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const App: React.FC = () => {
+  const [title, updateTitle] = useState<string>();
+  const [errorMessage, updateErrorMessage] = useState<string | null>(null);
 
   return (
-    <>
-      <div>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src={viteLogo} className='logo' alt='Vite logo' />
-        </a>
-        <a href='https://react.dev' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className='card'>
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className='read-the-docs'>
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ChakraProvider>
+      <Router>
+        <Container>
+          <Header title={title} />
+          <Content>
+            <Routes>
+              <Route
+                path='/'
+                element={
+                  <LoginForm
+                    showError={updateErrorMessage}
+                    updateTitle={updateTitle}
+                  />
+                }
+              />
+              <Route
+                path='/register'
+                element={
+                  <RegistrationForm
+                    showError={updateErrorMessage}
+                    updateTitle={updateTitle}
+                  />
+                }
+              />
+              <Route
+                path='/login'
+                element={
+                  <LoginForm
+                    showError={updateErrorMessage}
+                    updateTitle={updateTitle}
+                  />
+                }
+              />
+              <Route
+                path='/home'
+                element={
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute>
+                }
+              />
+              <Route path='/verify/:token' element={<VerifyEmail />} />
+            </Routes>
+            <AlertComponent
+              errorMessage={errorMessage}
+              hideError={updateErrorMessage}
+            />
+          </Content>
+        </Container>
+      </Router>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;
