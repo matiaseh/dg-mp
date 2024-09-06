@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: dg-mp
+    env: static
+    staticPublishPath: dist
+    redirects:
+      - source: /:path*
+        destination: /index.html
+        status: 200
