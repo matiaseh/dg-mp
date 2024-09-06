@@ -45,7 +45,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, updateTitle }) => {
   });
 
   const navigate = useNavigate();
-  console.log(API_BASE_URL);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setState(prevState => ({
