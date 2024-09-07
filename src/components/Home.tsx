@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../constants/apiConstants';
 import styled from '@emotion/styled';
+import { Button } from '@chakra-ui/react';
 
 const Container = styled.div`
   margin-top: 2rem;
@@ -13,8 +14,13 @@ const Home: React.FC = () => {
   const navigate = useNavigate();
 
   const redirectToLogin = useCallback(() => {
-    navigate('/login');
+    navigate('/');
   }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('login_access_token');
+    navigate('/');
+  };
 
   useEffect(() => {
     const token = localStorage.getItem(ACCESS_TOKEN_NAME);
@@ -37,7 +43,12 @@ const Home: React.FC = () => {
     return <div>Loading...</div>; // Display loading indicator while data is being fetched
   }
 
-  return <Container>Home page content</Container>;
+  return (
+    <Container>
+      <h1>Home page content</h1>
+      <Button onClick={handleLogout}>Logout</Button>
+    </Container>
+  );
 };
 
 export default Home;

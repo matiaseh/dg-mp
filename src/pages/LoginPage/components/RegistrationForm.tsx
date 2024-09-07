@@ -1,14 +1,17 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, ACCESS_TOKEN_NAME } from '../constants/apiConstants';
-import { useNavigate } from 'react-router-dom';
-import { handleApiError } from '../utils/errorHandling';
+import {
+  API_BASE_URL,
+  ACCESS_TOKEN_NAME,
+} from '../../../constants/apiConstants';
+import { handleApiError } from '../../../utils/errorHandling';
 import styled from '@emotion/styled';
-import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { FormFooter, FlipCard, Form } from './LoginForm';
 
 interface RegistrationFormProps {
   showError: (message: string | null) => void;
-  updateTitle: (title: string) => void;
+  onClick: () => void;
 }
 
 interface RegistrationFormState {
@@ -18,15 +21,6 @@ interface RegistrationFormState {
   userName: string;
 }
 
-const Form = styled.form`
-  min-height: 60vh;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-`;
-
 export const RedirectLink = styled.span`
   color: #007bff;
   font-weight: bold;
@@ -35,7 +29,7 @@ export const RedirectLink = styled.span`
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({
   showError,
-  updateTitle,
+  onClick,
 }) => {
   const [state, setState] = useState<RegistrationFormState>({
     email: '',
@@ -44,8 +38,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     userName: '',
   });
   const [loading, setLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -74,7 +66,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             ...prevState,
           }));
           localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
-          redirectToLogin();
+          onClick();
           showError(null);
         } else {
           showError('Some error occurred');
@@ -90,11 +82,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
     }
   };
 
-  const redirectToLogin = () => {
-    updateTitle('Login');
-    navigate('/login');
-  };
-
   const handleSubmitClick = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state.password === state.confirmPassword) {
@@ -105,7 +92,14 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   };
 
   return (
-    <>
+    <Box
+      display='flex'
+      flexDirection='column'
+      gap={4}
+      p={4}
+      borderWidth={1}
+      borderRadius='md'
+    >
       <Form onSubmit={handleSubmitClick}>
         <FormControl>
           <FormLabel>User Name</FormLabel>
@@ -140,21 +134,16 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             value={state.confirmPassword}
             onChange={handleChange}
           />
+          <Button type='submit' colorScheme='blue' isLoading={loading} mt={4}>
+            {loading ? 'Registering...' : 'Register'}
+          </Button>
         </FormControl>
-        <Button
-          type='submit'
-          colorScheme='blue'
-          size={'lg'}
-          isLoading={loading}
-        >
-          {loading ? 'Registering...' : 'Register'}
-        </Button>
+        <FormFooter>
+          <span>Already have an account? </span>
+          <FlipCard onClick={onClick}>Log in</FlipCard>
+        </FormFooter>
       </Form>
-      <div>
-        <span>Already have an account? </span>
-        <RedirectLink onClick={redirectToLogin}>Login here</RedirectLink>
-      </div>
-    </>
+    </Box>
   );
 };
 

@@ -1,14 +1,17 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import { API_BASE_URL, ACCESS_TOKEN_NAME } from '../constants/apiConstants';
+import {
+  API_BASE_URL,
+  ACCESS_TOKEN_NAME,
+} from '../../../constants/apiConstants';
 import { useNavigate } from 'react-router-dom';
-import { handleApiError } from '../utils/errorHandling';
+import { handleApiError } from '../../../utils/errorHandling';
 import styled from '@emotion/styled';
-import { FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Button, Box } from '@chakra-ui/react';
 
 interface LoginFormProps {
   showError: (message: string | null) => void;
-  updateTitle: (title: string) => void;
+  onClick: () => void;
 }
 
 interface LoginFormState {
@@ -17,26 +20,26 @@ interface LoginFormState {
   successMessage: string | null;
 }
 
-const Form = styled.form`
+export const Form = styled.form`
   min-height: 60vh;
   max-width: 400px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  padding: 1rem;
 `;
 
-const RegisterMessage = styled.div`
-  margin-top: 10vh;
-`;
+export const FormFooter = styled.div``;
 
-const RegisterLink = styled.span`
+export const FlipCard = styled.span`
   color: #007bff;
   font-weight: bold;
   cursor: pointer;
 `;
 
-const LoginForm: React.FC<LoginFormProps> = ({ showError, updateTitle }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ showError, onClick }) => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState<LoginFormState>({
     email: '',
@@ -79,43 +82,46 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, updateTitle }) => {
   };
 
   const redirectToHome = () => {
-    updateTitle('Home');
     navigate('/home');
   };
 
-  const redirectToRegister = () => {
-    navigate('/register');
-    updateTitle('Register');
-  };
-
   return (
-    <Form onSubmit={handleSubmitClick}>
-      <FormControl>
-        <FormLabel mt={4}>Email address</FormLabel>
-        <Input
-          type='email'
-          id='email'
-          placeholder='Enter email'
-          value={state.email}
-          onChange={handleChange}
-        />
-        <FormLabel mt={4}>Password</FormLabel>
-        <Input
-          type='password'
-          id='password'
-          placeholder='Password'
-          value={state.password}
-          onChange={handleChange}
-        />
-      </FormControl>
-      <Button type='submit' colorScheme='blue' size={'lg'} isLoading={loading}>
-        Login
-      </Button>
-      <RegisterMessage>
-        <span>Don't have an account? </span>
-        <RegisterLink onClick={redirectToRegister}>Register</RegisterLink>
-      </RegisterMessage>
-    </Form>
+    <Box
+      display='flex'
+      flexDirection='column'
+      gap={4}
+      p={4}
+      borderWidth={1}
+      borderRadius='md'
+    >
+      <Form onSubmit={handleSubmitClick}>
+        <FormControl>
+          <FormLabel htmlFor='email'>Email address</FormLabel>
+          <Input
+            type='email'
+            id='email'
+            placeholder='Enter email'
+            value={state.email}
+            onChange={handleChange}
+          />
+          <FormLabel htmlFor='password'>Password</FormLabel>
+          <Input
+            type='password'
+            id='password'
+            placeholder='Password'
+            value={state.password}
+            onChange={handleChange}
+          />
+          <Button type='submit' colorScheme='blue' mt={4} isLoading={loading}>
+            Login
+          </Button>
+        </FormControl>
+        <FormFooter>
+          <span>Don't have an account? </span>
+          <FlipCard onClick={onClick}>Register</FlipCard>
+        </FormFooter>
+      </Form>
+    </Box>
   );
 };
 

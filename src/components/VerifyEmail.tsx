@@ -2,13 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../constants/apiConstants';
-import { RedirectLink } from './RegistrationForm';
+import { RedirectLink } from '../pages/LoginPage/components/RegistrationForm';
 
-interface RegistrationFormProps {
-  updateTitle: (title: string) => void;
-}
-
-const VerifyEmail = (props: RegistrationFormProps) => {
+const VerifyEmail = () => {
   const { token } = useParams<{ token: string }>(); // Get the token from the URL
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -35,8 +31,7 @@ const VerifyEmail = (props: RegistrationFormProps) => {
         {message && <p>{message}</p>}
         <RedirectLink
           onClick={() => {
-            props.updateTitle('Login');
-            navigate('/login');
+            navigate('/');
           }}
         >
           Login here
