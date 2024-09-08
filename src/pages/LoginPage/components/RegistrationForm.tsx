@@ -15,9 +15,9 @@ interface RegistrationFormProps {
 }
 
 interface RegistrationFormState {
-  email: string;
-  password: string;
-  confirmPassword: string;
+  userEmail: string;
+  userPassword: string;
+  confirmUserPassword: string;
   userName: string;
 }
 
@@ -26,9 +26,9 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   flipCard,
 }) => {
   const [state, setState] = useState<RegistrationFormState>({
-    email: '',
-    password: '',
-    confirmPassword: '',
+    userEmail: '',
+    userPassword: '',
+    confirmUserPassword: '',
     userName: '',
   });
   const [loading, setLoading] = useState(false);
@@ -42,11 +42,11 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   };
 
   const sendDetailsToServer = async () => {
-    if (state.email.length && state.password.length) {
+    if (state.userEmail.length && state.userPassword.length) {
       showError(null);
       const payload = {
-        email: state.email,
-        password: state.password,
+        email: state.userEmail,
+        password: state.userPassword,
         name: state.userName,
       };
       setLoading(true);
@@ -78,7 +78,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
 
   const handleSubmitClick = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (state.password === state.confirmPassword) {
+    if (state.userPassword === state.confirmUserPassword) {
       await sendDetailsToServer();
     } else {
       showError('Passwords do not match');
@@ -102,7 +102,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             type='email'
             id='userEmail'
             placeholder='Enter email'
-            value={state.email}
+            value={state.userEmail}
             onChange={handleChange}
           />
           <FormLabel htmlFor='userPassword'>Password</FormLabel>
@@ -110,7 +110,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             type='password'
             id='userPassword'
             placeholder='Password'
-            value={state.password}
+            value={state.userPassword}
             onChange={handleChange}
           />
           <FormLabel htmlFor='confirmUserPassword'>Confirm Password</FormLabel>
@@ -118,7 +118,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             type='password'
             id='confirmUserPassword'
             placeholder='Confirm Password'
-            value={state.confirmPassword}
+            value={state.confirmUserPassword}
             onChange={handleChange}
           />
           <Button type='submit' colorScheme='blue' isLoading={loading} mt={4}>
