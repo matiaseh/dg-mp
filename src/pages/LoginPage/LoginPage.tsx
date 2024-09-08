@@ -22,12 +22,12 @@ const LoginPage: React.FC = () => {
       )}
       <div className='flip-inner'>
         <div className='flip-front'>
-          <LoginForm showError={updateErrorMessage} onClick={handleFlip} />
+          <LoginForm showError={updateErrorMessage} flipCard={handleFlip} />
         </div>
         <div className='flip-back'>
           <RegistrationForm
             showError={updateErrorMessage}
-            onClick={handleFlip}
+            flipCard={handleFlip}
           />
         </div>
       </div>

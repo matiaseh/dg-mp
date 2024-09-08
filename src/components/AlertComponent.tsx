@@ -20,22 +20,20 @@ export const AlertComponent: React.FC<AlertComponentProps> = ({
     updateErrorMessage(null);
   };
   return (
-    <>
-      <Alert status='error'>
-        <AlertIcon />
-        <AlertDescription>{errorMessage}</AlertDescription>
-        <IconButton
-          onClick={closeErrorMessage}
-          isRound={true}
-          size={'xs'}
-          variant='ghost'
-          colorScheme='black'
-          aria-label='Close'
-          ml={2}
-          icon={<CloseIcon />}
-        />
-      </Alert>
-    </>
+    <Alert status='error' style={{ position: 'absolute', zIndex: 1 }}>
+      <AlertIcon />
+      <AlertDescription>{errorMessage}</AlertDescription>
+      <IconButton
+        onClick={closeErrorMessage}
+        isRound={true}
+        size={'xs'}
+        variant='ghost'
+        colorScheme='black'
+        aria-label='Close'
+        ml={2}
+        icon={<CloseIcon />}
+      />
+    </Alert>
   );
 };
 

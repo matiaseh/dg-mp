@@ -5,13 +5,13 @@ import {
   ACCESS_TOKEN_NAME,
 } from '../../../constants/apiConstants';
 import { handleApiError } from '../../../utils/errorHandling';
-import styled from '@emotion/styled';
-import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { FormFooter, FlipCard, Form } from './LoginForm';
+import FormCard from './FormCard';
 
 interface RegistrationFormProps {
   showError: (message: string | null) => void;
-  onClick: () => void;
+  flipCard: () => void;
 }
 
 interface RegistrationFormState {
@@ -21,15 +21,9 @@ interface RegistrationFormState {
   userName: string;
 }
 
-export const RedirectLink = styled.span`
-  color: #007bff;
-  font-weight: bold;
-  cursor: pointer;
-`;
-
 const RegistrationForm: React.FC<RegistrationFormProps> = ({
   showError,
-  onClick,
+  flipCard,
 }) => {
   const [state, setState] = useState<RegistrationFormState>({
     email: '',
@@ -66,7 +60,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             ...prevState,
           }));
           localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
-          onClick();
+          flipCard();
           showError(null);
         } else {
           showError('Some error occurred');
@@ -92,17 +86,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
   };
 
   return (
-    <Box
-      display='flex'
-      flexDirection='column'
-      gap={4}
-      p={4}
-      borderWidth={1}
-      borderRadius='md'
-    >
+    <FormCard>
       <Form onSubmit={handleSubmitClick}>
         <FormControl>
-          <FormLabel>User Name</FormLabel>
+          <FormLabel htmlFor='userName'>User Name</FormLabel>
           <Input
             type='text'
             id='userName'
@@ -110,26 +97,26 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
             value={state.userName}
             onChange={handleChange}
           />
-          <FormLabel htmlFor='email'>Email address</FormLabel>
+          <FormLabel htmlFor='userEmail'>Email address</FormLabel>
           <Input
             type='email'
-            id='email'
+            id='userEmail'
             placeholder='Enter email'
             value={state.email}
             onChange={handleChange}
           />
-          <FormLabel htmlFor='password'>Password</FormLabel>
+          <FormLabel htmlFor='userPassword'>Password</FormLabel>
           <Input
             type='password'
-            id='password'
+            id='userPassword'
             placeholder='Password'
             value={state.password}
             onChange={handleChange}
           />
-          <FormLabel htmlFor='confirmPassword'>Confirm Password</FormLabel>
+          <FormLabel htmlFor='confirmUserPassword'>Confirm Password</FormLabel>
           <Input
             type='password'
-            id='confirmPassword'
+            id='confirmUserPassword'
             placeholder='Confirm Password'
             value={state.confirmPassword}
             onChange={handleChange}
@@ -140,10 +127,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
         </FormControl>
         <FormFooter>
           <span>Already have an account? </span>
-          <FlipCard onClick={onClick}>Log in</FlipCard>
+          <FlipCard onClick={flipCard}>Log in</FlipCard>
         </FormFooter>
       </Form>
-    </Box>
+    </FormCard>
   );
 };
 

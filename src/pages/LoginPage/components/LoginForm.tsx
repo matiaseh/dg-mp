@@ -7,11 +7,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { handleApiError } from '../../../utils/errorHandling';
 import styled from '@emotion/styled';
-import { FormControl, FormLabel, Input, Button, Box } from '@chakra-ui/react';
+import { FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
+import FormCard from './FormCard';
 
 interface LoginFormProps {
   showError: (message: string | null) => void;
-  onClick: () => void;
+  flipCard: () => void;
 }
 
 interface LoginFormState {
@@ -39,7 +40,7 @@ export const FlipCard = styled.span`
   cursor: pointer;
 `;
 
-const LoginForm: React.FC<LoginFormProps> = ({ showError, onClick }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState<LoginFormState>({
     email: '',
@@ -86,14 +87,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, onClick }) => {
   };
 
   return (
-    <Box
-      display='flex'
-      flexDirection='column'
-      gap={4}
-      p={4}
-      borderWidth={1}
-      borderRadius='md'
-    >
+    <FormCard>
       <Form onSubmit={handleSubmitClick}>
         <FormControl>
           <FormLabel htmlFor='email'>Email address</FormLabel>
@@ -116,12 +110,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, onClick }) => {
             Login
           </Button>
         </FormControl>
-        <FormFooter>
+        <div>
           <span>Don't have an account? </span>
-          <FlipCard onClick={onClick}>Register</FlipCard>
-        </FormFooter>
+          <FlipCard onClick={flipCard}>Register</FlipCard>
+        </div>
       </Form>
-    </Box>
+    </FormCard>
   );
 };
 

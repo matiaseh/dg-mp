@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { API_BASE_URL } from '../constants/apiConstants';
-import { RedirectLink } from '../pages/LoginPage/components/RegistrationForm';
+import styled from '@emotion/styled';
+
+const RedirectLink = styled.span`
+  color: #007bff;
+  font-weight: bold;
+  cursor: pointer;
+`;
 
 const VerifyEmail = () => {
   const { token } = useParams<{ token: string }>(); // Get the token from the URL
