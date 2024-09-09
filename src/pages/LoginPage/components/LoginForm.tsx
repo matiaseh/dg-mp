@@ -9,6 +9,7 @@ import { handleApiError } from '../../../utils/errorHandling';
 import styled from '@emotion/styled';
 import { FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
 import FormCard from './FormCard';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface LoginFormProps {
   showError: (message: string | null) => void;
@@ -48,6 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
     successMessage: null,
   });
 
+  const { login } = useAuth();
   const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -64,15 +66,19 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
       email: state.email,
       password: state.password,
     };
+
     try {
       const response = await axios.post(`${API_BASE_URL}/user/login`, payload);
       if (response.status === 200) {
+        const { token } = response.data;
+        login();
+        localStorage.setItem(ACCESS_TOKEN_NAME, token);
+
         setState(prevState => ({
           ...prevState,
           successMessage: 'Login successful. Redirecting to home page..',
         }));
-        localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
-        redirectToHome();
+        navigate('/home');
         showError(null);
       }
     } catch (error) {
@@ -80,10 +86,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const redirectToHome = () => {
-    navigate('/home');
   };
 
   return (

@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
+import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
+import Home from './pages/HomePage/Home';
 import PrivateRoute from './utils/PrivateRoute';
-import AlertComponent from './components/AlertComponent';
 import styled from '@emotion/styled';
 import { ChakraProvider } from '@chakra-ui/react';
 import VerifyEmail from './components/VerifyEmail';
 import './App.css';
 import LoginPage from './pages/LoginPage/LoginPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 const Container = styled.div`
   text-align: center;
@@ -16,27 +21,38 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
-const App: React.FC = () => {
+const AppRoutes: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <ChakraProvider>
-      <Router>
-        <Container>
-          <Routes>
-            <Route path='/' element={<LoginPage />} />
-            <Route
-              path='/home'
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              }
-            />
-            <Route path='/verify/:token' element={<VerifyEmail />} />
-          </Routes>
-        </Container>
-      </Router>
-    </ChakraProvider>
+    <Container>
+      <Routes>
+        <Route
+          path='/'
+          element={isAuthenticated ? <Navigate to='/home' /> : <LoginPage />}
+        />
+        <Route
+          path='/home'
+          element={
+            <PrivateRoute>
+              <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route path='/verify/:token' element={<VerifyEmail />} />
+      </Routes>
+    </Container>
   );
 };
+
+const App: React.FC = () => (
+  <AuthProvider>
+    <ChakraProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </ChakraProvider>
+  </AuthProvider>
+);
 
 export default App;

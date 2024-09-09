@@ -1,15 +1,16 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../constants/apiConstants';
 import styled from '@emotion/styled';
 import { Button } from '@chakra-ui/react';
+import PostsList from './components/PostsList';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Container = styled.div`
   margin-top: 2rem;
 `;
 
 const Home: React.FC = () => {
+  const { isAuthenticated, logout } = useAuth();
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -18,29 +19,20 @@ const Home: React.FC = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('login_access_token');
+    logout();
     navigate('/');
   };
 
   useEffect(() => {
-    const token = localStorage.getItem(ACCESS_TOKEN_NAME);
-    axios
-      .get(`${API_BASE_URL}/user/me`, { headers: { token: token } })
-      .then(response => {
-        if (response.status !== 200) {
-          redirectToLogin();
-        }
-      })
-      .catch(() => {
-        redirectToLogin();
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [redirectToLogin]);
+    if (!isAuthenticated) {
+      redirectToLogin();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated, redirectToLogin]);
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading indicator while data is being fetched
+    return <div>Loading...</div>;
   }
 
   return (

@@ -1,9 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import {
-  API_BASE_URL,
-  ACCESS_TOKEN_NAME,
-} from '../../../constants/apiConstants';
+import { API_BASE_URL } from '../../../constants/apiConstants';
 import { handleApiError } from '../../../utils/errorHandling';
 import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { FormFooter, FlipCard, Form } from './LoginForm';
@@ -59,7 +56,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({
           setState(prevState => ({
             ...prevState,
           }));
-          localStorage.setItem(ACCESS_TOKEN_NAME, response.data.token);
           flipCard();
           showError(null);
         } else {

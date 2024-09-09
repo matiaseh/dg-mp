@@ -1,14 +1,14 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME } from '../constants/apiConstants';
+import { useAuth } from '../contexts/AuthContext';
 
 interface PrivateRouteProps {
   children: React.ReactElement;
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
-  const isAuthenticated = !!localStorage.getItem(ACCESS_TOKEN_NAME);
 
   if (!isAuthenticated) {
     // Redirect them to the main page if not logged in
