@@ -3,18 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Button } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
+import PostsList from '../HomePage/components/PostsList';
 import { useAuthCheck } from '../../hooks/useAuthCheck';
-import PostsList from './components/PostsList';
 
 const Container = styled.div`
-  width: 100%;
+  margin-top: 2rem;
 `;
 
-const Home: React.FC = () => {
+const Profile: React.FC = () => {
   const { isAuthenticated, loading } = useAuthCheck();
   const { handleLogout } = useAuth();
 
   const navigate = useNavigate();
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -22,15 +23,11 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <nav
-        style={{ display: 'flex', gap: '1rem', justifyContent: 'space-evenly' }}
-      >
-        <Button onClick={() => navigate('/profile')}>my profile</Button>
-      </nav>
-      <PostsList />
+      <Button onClick={() => navigate('/home')}></Button>
+      <PostsList showOwn={true} />
       <Button onClick={handleLogout}>Logout</Button>
     </Container>
   );
 };
 
-export default Home;
+export default Profile;

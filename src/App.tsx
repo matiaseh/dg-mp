@@ -13,12 +13,14 @@ import VerifyEmail from './components/VerifyEmail';
 import './App.css';
 import LoginPage from './pages/LoginPage/LoginPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Profile from './pages/MyProfile/MyProfilePage';
 
 const Container = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  align-items: center;
 `;
 
 const AppRoutes: React.FC = () => {
@@ -36,6 +38,14 @@ const AppRoutes: React.FC = () => {
           element={
             <PrivateRoute>
               <Home />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />
