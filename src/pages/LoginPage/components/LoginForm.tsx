@@ -1,9 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
-import {
-  API_BASE_URL,
-  ACCESS_TOKEN_NAME,
-} from '../../../constants/apiConstants';
+import { API_BASE_URL } from '../../../constants/apiConstants';
 import { useNavigate } from 'react-router-dom';
 import { handleApiError } from '../../../utils/errorHandling';
 import styled from '@emotion/styled';
