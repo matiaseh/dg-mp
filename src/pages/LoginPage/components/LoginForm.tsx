@@ -49,7 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
     successMessage: null,
   });
 
-  const { login } = useAuth();
+  const { handleLogin } = useAuth();
   const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -71,8 +71,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
       const response = await axios.post(`${API_BASE_URL}/user/login`, payload);
       if (response.status === 200) {
         const { token } = response.data;
-        login();
-        localStorage.setItem(ACCESS_TOKEN_NAME, token);
+        handleLogin(token);
 
         setState(prevState => ({
           ...prevState,

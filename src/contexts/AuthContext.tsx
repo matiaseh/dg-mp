@@ -10,8 +10,8 @@ import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../constants/apiConstants';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+  handleLogin: (token: string) => void;
+  handleLogout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,18 +44,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     verifyToken();
   }, []);
 
-  const login = () => {
-    localStorage.setItem(ACCESS_TOKEN_NAME, 'your_token_here');
+  const handleLogin = (token: string) => {
+    localStorage.setItem(ACCESS_TOKEN_NAME, token);
     setIsAuthenticated(true);
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem(ACCESS_TOKEN_NAME);
     setIsAuthenticated(false);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, handleLogin, handleLogout }}
+    >
       {children}
     </AuthContext.Provider>
   );
