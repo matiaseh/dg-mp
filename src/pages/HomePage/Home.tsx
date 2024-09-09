@@ -5,6 +5,7 @@ import { Button } from '@chakra-ui/react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useAuthCheck } from '../../hooks/useAuthCheck';
 import PostsList from './components/PostsList';
+import ImageUpload from './components/ImageUploader';
 
 const Container = styled.div`
   width: 100%;
@@ -25,6 +26,7 @@ const Home: React.FC = () => {
       <nav
         style={{ display: 'flex', gap: '1rem', justifyContent: 'space-evenly' }}
       >
+        <ImageUpload />
         <Button onClick={() => navigate('/profile')}>my profile</Button>
       </nav>
       <PostsList />
