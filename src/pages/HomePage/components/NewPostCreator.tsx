@@ -7,18 +7,25 @@ import {
 import {
   Box,
   Button,
+  IconButton,
   Input,
+  List,
+  ListItem,
   Modal,
   ModalBody,
-  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 import { useDiscs } from '../../../contexts/DiscContext';
+import FlightNumberStack from './FlightNumberStack';
+import { CloseIcon } from '@chakra-ui/icons';
+import { FlexColumn, FlexRow } from '../../../components/FlexBox';
+import Carousel from '../../../components/Carousel';
 
 export interface Disc {
   _id: string;
@@ -90,7 +97,7 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     setSuggestListOpen(true);
   };
 
-  const handleDiscSelect = (disc: Disc) => {
+  const handleDiscSelect = (disc: Disc | null) => {
     setSelectedDisc(disc);
     setSearch('');
   };
@@ -145,6 +152,7 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       setUploadError('Failed to upload files');
     } finally {
       setUploading(false);
+      onClose();
     }
   };
 
@@ -153,8 +161,7 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Disc Search</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
+        <ModalBody display={'flex'} flexDirection={'column'} gap={'1rem'}>
           {!selectedDisc && (
             <VStack align='start' spacing={4}>
               <Box width='100%' position='relative'>
@@ -175,69 +182,79 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                     top='100%'
                     left='0'
                     right='0'
-                    p={2}
                     bg='white'
                     borderRadius='md'
                     shadow='md'
                     zIndex={1}
+                    overflowY='auto'
+                    maxH='calc(100vh - 180px)'
                   >
-                    <ul>
+                    <List>
                       {filteredDiscs.map(disc => (
-                        <li
+                        <ListItem
+                          _hover={{
+                            bg: 'gray.100',
+                            color: 'blue.500',
+                            cursor: 'pointer',
+                            transition: 'all 0.3s ease',
+                          }}
+                          p={2}
                           key={disc._id}
                           style={{ cursor: 'pointer' }}
                           onClick={() => handleDiscSelect(disc)}
                         >
                           {disc.manufacturer} {disc.name}
-                        </li>
+                        </ListItem>
                       ))}
-                    </ul>
+                    </List>
                   </Box>
                 )}
               </Box>
             </VStack>
           )}
-          <p>
-            {selectedDisc?.manufacturer} {selectedDisc?.name}
-          </p>
-          <p>{selectedDisc?.speed}</p>
-          <p>{selectedDisc?.glide}</p>
-          <p>{selectedDisc?.turn}</p>
-          <p>{selectedDisc?.fade}</p>
-          <input
-            type='file'
-            multiple
-            accept='image/*'
-            onChange={handleFileChange}
-          />
-          {imagePreviews.length > 0 && (
-            <div>
-              {imagePreviews.map((preview, index) => (
-                <img
-                  key={index}
-                  src={preview}
-                  alt={`Preview ${index}`}
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    objectFit: 'cover',
-                    marginRight: '8px',
-                  }}
+          {selectedDisc && (
+            <FlexColumn>
+              <FlexRow>
+                <Text fontSize='lg'>
+                  {selectedDisc?.manufacturer} {selectedDisc?.name}
+                </Text>
+                <IconButton
+                  onClick={() => setSelectedDisc(null)}
+                  size={'xs'}
+                  variant='ghost'
+                  colorScheme='black'
+                  aria-label='Close'
+                  ml={2}
+                  icon={<CloseIcon />}
                 />
-              ))}
-            </div>
+              </FlexRow>
+              <FlightNumberStack disc={selectedDisc} />
+            </FlexColumn>
           )}
-          <button onClick={handleUpload} disabled={uploading}>
-            {uploading ? 'Uploading...' : 'Upload Images'}
-          </button>
-          {uploadError && <div>{uploadError}</div>}
+          <FlexColumn gap={2}>
+            {imagePreviews.length > 0 && <Carousel images={imagePreviews} />}
+            <input
+              type='file'
+              multiple
+              accept='image/*'
+              onChange={handleFileChange}
+            />
+          </FlexColumn>
         </ModalBody>
 
-        <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={onClose}>
+        <ModalFooter gap={'1rem'}>
+          <Button
+            onClick={handleUpload}
+            disabled={uploading}
+            colorScheme='blue'
+          >
+            {uploading ? 'Uploading...' : 'Post'}
+          </Button>
+          <Button mr={3} onClick={onClose}>
             Close
           </Button>
         </ModalFooter>
+        {uploadError && <div>{uploadError}</div>}
       </ModalContent>
     </Modal>
   );
