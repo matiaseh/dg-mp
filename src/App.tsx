@@ -14,6 +14,7 @@ import './App.css';
 import LoginPage from './pages/LoginPage/LoginPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Profile from './pages/MyProfile/MyProfilePage';
+import { DiscProvider } from './contexts/DiscContext';
 
 const Container = styled.div`
   text-align: center;
@@ -47,7 +48,9 @@ const App: React.FC = () => (
   <ChakraProvider>
     <Router>
       <AuthProvider>
-        <AppRoutes />
+        <DiscProvider>
+          <AppRoutes />
+        </DiscProvider>
       </AuthProvider>
     </Router>
   </ChakraProvider>

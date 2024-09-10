@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   ACCESS_TOKEN_NAME,
@@ -16,60 +16,53 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   useDisclosure,
 } from '@chakra-ui/react';
+import { useDiscs } from '../../../contexts/DiscContext';
 
-interface DiscInfoState {
-  title: string;
-  plastic: string;
-  flightNumbers: {
-    speed: number;
-    glide: number;
-    stability: number;
-    fade: number;
-  };
+export interface Disc {
+  _id: string;
+  manufacturer: string;
+  name: string;
+  speed: number;
+  glide: number;
+  turn: number;
+  fade: number;
 }
 
 const ImageUpload: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { discs } = useDiscs();
+
+  const [search, setSearch] = useState<string>('');
+  const [selectedDisc, setSelectedDisc] = useState<Disc | null>(null);
+  const [filteredDiscs, setFilteredDiscs] = useState<Disc[]>([]);
 
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const [state, setState] = useState<DiscInfoState>({
-    title: '',
-    plastic: '',
-    flightNumbers: {
-      speed: 0,
-      glide: 0,
-      stability: 0,
-      fade: 0,
-    },
-  });
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    if (id in state.flightNumbers) {
-      const parsedValue = value === '' ? 0 : parseFloat(value);
-      setState(prevState => ({
-        ...prevState,
-        flightNumbers: {
-          ...prevState.flightNumbers,
-          [id]: isNaN(parsedValue) ? 0 : parsedValue,
-        },
-      }));
-    } else {
-      setState(prevState => ({
-        ...prevState,
-        [id]: value,
-      }));
+  useEffect(() => {
+    if (discs) {
+      if (search) {
+        // Split the search into keywords and show suggested filtered discs
+        const keywords = search.toLowerCase().split(' ').filter(Boolean);
+        setFilteredDiscs(
+          discs.filter(disc => {
+            const discString =
+              `${disc.manufacturer} ${disc.name}`.toLowerCase();
+            return keywords.every(keyword => discString.includes(keyword));
+          })
+        );
+      } else {
+        setFilteredDiscs([]);
+      }
     }
+  }, [search, discs]);
+
+  const handleDiscSelect = (disc: Disc) => {
+    setSelectedDisc(disc);
+    setSearch('');
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,22 +72,24 @@ const ImageUpload: React.FC = () => {
   };
 
   const handleUpload = async () => {
-    const { title, plastic } = state;
-    if (!title || !plastic || !selectedFiles || selectedFiles.length === 0) {
-      setError('Please fill out all fields and select at least one image.');
+    if (!selectedDisc || !selectedFiles || selectedFiles.length === 0) {
+      setUploadError('Please select a disc and add at least one image.');
       return;
     }
     setUploading(true);
-    setError(null);
+    setUploadError(null);
 
     const formData = new FormData();
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append('images', selectedFiles[i]);
     }
 
-    formData.append('title', state.title);
-    formData.append('plastic', state.plastic);
-    formData.append('flightNumbers', JSON.stringify(state.flightNumbers));
+    const { name, speed, glide, turn, fade } = selectedDisc;
+    formData.append('title', name);
+    formData.append(
+      'flightNumbers',
+      JSON.stringify({ speed, glide, turn, fade })
+    );
 
     try {
       const token = localStorage.getItem(ACCESS_TOKEN_NAME);
@@ -106,7 +101,7 @@ const ImageUpload: React.FC = () => {
       });
       alert('Files uploaded successfully');
     } catch (err) {
-      setError('Failed to upload files');
+      setUploadError('Failed to upload files');
     } finally {
       setUploading(false);
     }
@@ -118,121 +113,35 @@ const ImageUpload: React.FC = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Disc Search</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <FormControl>
-              <FormLabel htmlFor='title'>Title</FormLabel>
+              <FormLabel htmlFor='discSearch'>Search Discs</FormLabel>
               <Input
                 type='text'
-                id='title'
-                value={state.title}
-                onChange={handleChange}
+                id='discSearch'
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder='Search for discs...'
               />
+              <ul>
+                {filteredDiscs.map(disc => (
+                  <li
+                    key={disc._id}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleDiscSelect(disc)}
+                  >
+                    {disc.manufacturer} {disc.name}
+                  </li>
+                ))}
+              </ul>
             </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor='plastic'>Plastic</FormLabel>
-              <Input
-                type='text'
-                id='plastic'
-                value={state.plastic}
-                onChange={handleChange}
-              />
-            </FormControl>
-
-            <FormControl mb={4}>
-              <FormLabel htmlFor='speed'>Speed</FormLabel>
-              <NumberInput
-                id='speed'
-                value={state.flightNumbers.speed}
-                onChange={valueString =>
-                  setState(prevState => ({
-                    ...prevState,
-                    flightNumbers: {
-                      ...prevState.flightNumbers,
-                      speed: valueString === '' ? 0 : parseFloat(valueString),
-                    },
-                  }))
-                }
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-
-            <FormControl mb={4}>
-              <FormLabel htmlFor='glide'>Glide</FormLabel>
-              <NumberInput
-                id='glide'
-                value={state.flightNumbers.glide}
-                onChange={valueString =>
-                  setState(prevState => ({
-                    ...prevState,
-                    flightNumbers: {
-                      ...prevState.flightNumbers,
-                      glide: valueString === '' ? 0 : parseFloat(valueString),
-                    },
-                  }))
-                }
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-
-            <FormControl mb={4}>
-              <FormLabel htmlFor='stability'>Stability</FormLabel>
-              <NumberInput
-                id='stability'
-                value={state.flightNumbers.stability}
-                onChange={valueString =>
-                  setState(prevState => ({
-                    ...prevState,
-                    flightNumbers: {
-                      ...prevState.flightNumbers,
-                      stability:
-                        valueString === '' ? 0 : parseFloat(valueString),
-                    },
-                  }))
-                }
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-
-            <FormControl mb={4}>
-              <FormLabel htmlFor='fade'>Fade</FormLabel>
-              <NumberInput
-                id='fade'
-                value={state.flightNumbers.fade}
-                onChange={valueString =>
-                  setState(prevState => ({
-                    ...prevState,
-                    flightNumbers: {
-                      ...prevState.flightNumbers,
-                      fade: valueString === '' ? 0 : parseFloat(valueString),
-                    },
-                  }))
-                }
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <h2>{selectedDisc?.name}</h2>
+            <p>{selectedDisc?.speed}</p>
+            <p>{selectedDisc?.glide}</p>
+            <p>{selectedDisc?.turn}</p>
+            <p>{selectedDisc?.fade}</p>
             <input
               type='file'
               multiple
@@ -242,7 +151,7 @@ const ImageUpload: React.FC = () => {
             <button onClick={handleUpload} disabled={uploading}>
               {uploading ? 'Uploading...' : 'Upload Images'}
             </button>
-            {error && <div>{error}</div>}
+            {uploadError && <div>{uploadError}</div>}
           </ModalBody>
 
           <ModalFooter>
