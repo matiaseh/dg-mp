@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Ensure this is inside the Router context
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     if (isAuthenticated === false) {
-      navigate('/'); // Redirect only if navigate is available
+      navigate('/');
     }
   }, [isAuthenticated, navigate]);
 
