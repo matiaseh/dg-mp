@@ -160,7 +160,7 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Disc Search</ModalHeader>
+        <ModalHeader>Create a new post</ModalHeader>
         <ModalBody display={'flex'} flexDirection={'column'} gap={'1rem'}>
           {!selectedDisc && (
             <VStack align='start' spacing={4}>
