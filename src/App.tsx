@@ -33,22 +33,10 @@ const AppRoutes: React.FC = () => {
           path='/'
           element={isAuthenticated ? <Navigate to='/home' /> : <LoginPage />}
         />
-        <Route
-          path='/home'
-          element={
-            <PrivateRoute>
-              <Home />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/profile'
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
+        <Route element={<PrivateRoute />}>
+          <Route path='home' element={<Home />} />
+          <Route path='profile' element={<Profile />} />
+        </Route>
         <Route path='/verify/:token' element={<VerifyEmail />} />
       </Routes>
     </Container>
@@ -56,13 +44,13 @@ const AppRoutes: React.FC = () => {
 };
 
 const App: React.FC = () => (
-  <AuthProvider>
-    <ChakraProvider>
-      <Router>
+  <ChakraProvider>
+    <Router>
+      <AuthProvider>
         <AppRoutes />
-      </Router>
-    </ChakraProvider>
-  </AuthProvider>
+      </AuthProvider>
+    </Router>
+  </ChakraProvider>
 );
 
 export default App;

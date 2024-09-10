@@ -1,21 +1,15 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-interface PrivateRouteProps {
-  children: React.ReactElement;
-}
+const PrivateRoute: React.FC = () => {
+  const { isAuthenticated, loading } = useAuth();
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation();
-
-  if (!isAuthenticated) {
-    // Redirect them to the main page if not logged in
-    return <Navigate to='/' state={{ from: location }} replace />;
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  return children;
+  return isAuthenticated ? <Outlet /> : <Navigate to='/' />;
 };
 
 export default PrivateRoute;

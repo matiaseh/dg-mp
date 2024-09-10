@@ -7,9 +7,11 @@ import React, {
   useEffect,
 } from 'react';
 import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../constants/apiConstants';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  loading: boolean;
   handleLogin: (token: string) => void;
   handleLogout: () => void;
 }
@@ -20,6 +22,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate(); // Ensure this is inside the Router context
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -40,9 +44,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       } else {
         setIsAuthenticated(false);
       }
+      setLoading(false);
     };
+
     verifyToken();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      navigate('/'); // Redirect only if navigate is available
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = (token: string) => {
     localStorage.setItem(ACCESS_TOKEN_NAME, token);
@@ -56,7 +68,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, handleLogin, handleLogout }}
+      value={{ isAuthenticated, loading, handleLogin, handleLogout }}
     >
       {children}
     </AuthContext.Provider>
