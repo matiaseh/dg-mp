@@ -243,7 +243,7 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   );
 };
 
-const ImageUpload: React.FC = () => {
+const NewPostCreator: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -254,4 +254,4 @@ const ImageUpload: React.FC = () => {
   );
 };
 
-export default ImageUpload;
+export default NewPostCreator;

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../constants/apiConstants';
-import { Disc } from '../pages/HomePage/components/ImageUploader';
+import { Disc } from '../pages/HomePage/components/NewPostCreator';
 
 interface DiscContextType {
   discs: Disc[] | null;
