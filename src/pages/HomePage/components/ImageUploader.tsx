@@ -101,7 +101,7 @@ const ImageUpload: React.FC = () => {
       await axios.post(`${API_BASE_URL}/posts/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          token: token,
+          Authorization: `Bearer ${token}`,
         },
       });
       alert('Files uploaded successfully');

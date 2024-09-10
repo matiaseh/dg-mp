@@ -40,7 +40,7 @@ const fetchPosts = async (onlyOwn?: boolean) => {
     : `${API_BASE_URL}/posts/`;
 
   const response = await axios.get(postsUrl, {
-    headers: { token: token },
+    headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;
 };

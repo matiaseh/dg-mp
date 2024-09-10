@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       if (token) {
         try {
           const response = await axios.get(`${API_BASE_URL}/user/me`, {
-            headers: { token },
+            headers: { Authorization: `Bearer ${token}` },
           });
           if (response.status === 200) {
             setIsAuthenticated(true);
