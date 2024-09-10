@@ -36,7 +36,8 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         onClick={handlePrev}
         zIndex={1}
         opacity={0.6}
-        display={showPrev ? 'block' : 'none'}
+        display={showPrev ? 'flex' : 'none'}
+        isRound={true}
       />
       <IconButton
         aria-label='Next slide'
@@ -48,7 +49,8 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         onClick={handleNext}
         zIndex={1}
         opacity={0.6}
-        display={showNext ? 'block' : 'none'}
+        display={showNext ? 'flex' : 'none'}
+        isRound={true}
       />
       <Box>
         <Image
