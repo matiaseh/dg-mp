@@ -1,22 +1,21 @@
 import React from 'react';
 import axios from 'axios';
-import styled from '@emotion/styled';
 import {
   ACCESS_TOKEN_NAME,
   API_BASE_URL,
 } from '../../../constants/apiConstants';
 import { useQuery } from '@tanstack/react-query';
+import { SimpleGrid } from '@chakra-ui/react';
+import { FlexColumn } from '../../../components/FlexBox';
+import { Disc } from './NewPostCreator';
+import ProductCard from './ProductCard';
 
-interface Post {
+export interface Post {
   _id: string;
   title: string;
-  plastic: string;
-  flightNumbers: {
-    speed: number;
-    glide: number;
-    stability: number;
-    fade: number;
-  };
+  disc: Disc;
+  price: string;
+  description?: string;
   images: string[];
   user: {
     _id: string;
@@ -25,12 +24,8 @@ interface Post {
 }
 
 interface PostListProps {
-  showOwn?: boolean;
+  showOwnPosts?: boolean;
 }
-
-const Container = styled.div`
-  margin-top: 2rem;
-`;
 
 const fetchPosts = async (onlyOwn?: boolean) => {
   const token = localStorage.getItem(ACCESS_TOKEN_NAME);
@@ -45,52 +40,32 @@ const fetchPosts = async (onlyOwn?: boolean) => {
   return response.data;
 };
 
-const PostsList: React.FC<PostListProps> = ({ showOwn }) => {
+const PostsList: React.FC<PostListProps> = ({ showOwnPosts }) => {
   const {
     data: posts,
     error,
     isLoading,
   } = useQuery<Post[], Error>({
     queryKey: ['posts'],
-    queryFn: () => fetchPosts(showOwn),
+    queryFn: () => fetchPosts(showOwnPosts),
   });
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching posts: {error.message}</p>;
 
   return (
-    <Container>
+    <FlexColumn gap={2}>
       <h1>All Posts</h1>
       {!posts || posts.length === 0 ? (
         <p>No posts available</p>
       ) : (
-        <ul>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 3 }} spacing={4}>
           {posts.map(post => (
-            <li key={post._id}>
-              <h2>{post.title}</h2>
-              <p>Plastic: {post.plastic}</p>
-              <p>Flight Numbers:</p>
-              <ul>
-                <li>Speed: {post.flightNumbers.speed}</li>
-                <li>Glide: {post.flightNumbers.glide}</li>
-                <li>Stability: {post.flightNumbers.stability}</li>
-                <li>Fade: {post.flightNumbers.fade}</li>
-              </ul>
-              <div>
-                {post.images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={`Post Image ${index}`}
-                    style={{ width: '100px', height: '100px' }}
-                  />
-                ))}
-              </div>
-            </li>
+            <ProductCard key={post._id} post={post} />
           ))}
-        </ul>
+        </SimpleGrid>
       )}
-    </Container>
+    </FlexColumn>
   );
 };
 
