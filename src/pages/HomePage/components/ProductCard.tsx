@@ -19,8 +19,8 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ post }) => {
   return (
-    <Card maxW='sm'>
-      <CardBody>
+    <Card maxW='sm' borderRadius='xl' overflow='hidden'>
+      <CardBody p={0}>
         <Carousel images={post.images} />
         <Stack mt='6' spacing='3'>
           <Heading size='md'>{post.title}</Heading>
