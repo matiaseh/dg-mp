@@ -7,8 +7,11 @@ import {
 import {
   Box,
   Button,
+  FormLabel,
   IconButton,
   Input,
+  InputGroup,
+  InputRightAddon,
   List,
   ListItem,
   Modal,
@@ -17,7 +20,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberInput,
+  NumberInputField,
   Text,
+  Textarea,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
@@ -51,6 +57,9 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [suggestListOpen, setSuggestListOpen] = useState(false);
+
+  const [price, setPrice] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -132,12 +141,10 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
       formData.append('images', selectedFiles[i]);
     }
 
-    const { name, speed, glide, turn, fade } = selectedDisc;
-    formData.append('title', name);
-    formData.append(
-      'flightNumbers',
-      JSON.stringify({ speed, glide, turn, fade })
-    );
+    formData.append('title', selectedDisc.name);
+    formData.append('discId', selectedDisc._id);
+    formData.append('price', price);
+    formData.append('description', description);
 
     try {
       const token = localStorage.getItem(ACCESS_TOKEN_NAME);
@@ -231,6 +238,27 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
               <FlightNumberStack disc={selectedDisc} />
             </FlexColumn>
           )}
+          <Box>
+            <FormLabel htmlFor='price'>Price</FormLabel>
+            <InputGroup width='100%'>
+              <NumberInput
+                id='price'
+                width='100%'
+                value={price}
+                onChange={value => setPrice(value)}
+              >
+                <NumberInputField />
+              </NumberInput>
+              <InputRightAddon children='€' />
+            </InputGroup>
+          </Box>
+          <Box>
+            <FormLabel htmlFor='desc'>Description</FormLabel>
+            <Textarea
+              id='desc'
+              onChange={e => setDescription(e.target.value)}
+            />
+          </Box>
           <FlexColumn gap={2}>
             {imagePreviews.length > 0 && <Carousel images={imagePreviews} />}
             <input
