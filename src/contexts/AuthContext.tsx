@@ -7,7 +7,6 @@ import React, {
   useEffect,
 } from 'react';
 import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../constants/apiConstants';
-import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -23,7 +22,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -49,12 +47,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     verifyToken();
   }, []);
-
-  useEffect(() => {
-    if (isAuthenticated === false) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
 
   const handleLogin = (token: string) => {
     localStorage.setItem(ACCESS_TOKEN_NAME, token);

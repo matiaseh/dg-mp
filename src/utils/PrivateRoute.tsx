@@ -5,11 +5,11 @@ import { useAuth } from '../contexts/AuthContext';
 const PrivateRoute: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (!isAuthenticated && !loading) {
+    return <Navigate to='/login' />;
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to='/' />;
+  return <Outlet />;
 };
 
 export default PrivateRoute;

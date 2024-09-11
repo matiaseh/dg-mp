@@ -7,9 +7,10 @@ import { ChakraProvider } from '@chakra-ui/react';
 import VerifyEmail from './components/VerifyEmail';
 import './App.css';
 import LoginPage from './pages/LoginPage/LoginPage';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Profile from './pages/MyProfile/MyProfilePage';
+import { AuthProvider } from './contexts/AuthContext';
+import Profile from './pages/HomePage/Profile';
 import { DiscProvider } from './contexts/DiscContext';
+import Layout from './pages/HomePage/Layout';
 
 const Container = styled.div`
   text-align: center;
@@ -20,16 +21,17 @@ const Container = styled.div`
 `;
 
 const AppRoutes: React.FC = () => {
-  const { isAuthenticated } = useAuth();
-
   return (
     <Container>
       <Routes>
-        <Route path='/' element={isAuthenticated ? <Home /> : <LoginPage />} />
-        <Route element={<PrivateRoute />}>
-          <Route path='profile' element={<Profile />} />
-        </Route>
+        <Route path='/login' element={<LoginPage />} />
         <Route path='/verify/:token' element={<VerifyEmail />} />
+        <Route path='/' element={<PrivateRoute />}>
+          <Route element={<Layout />}>
+            <Route path='' element={<Home />} />
+            <Route path='profile' element={<Profile />} />
+          </Route>
+        </Route>
       </Routes>
     </Container>
   );
