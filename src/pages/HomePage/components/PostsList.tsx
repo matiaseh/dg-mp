@@ -54,8 +54,7 @@ const PostsList: React.FC<PostListProps> = ({ showOwnPosts }) => {
   if (error) return <p>Error fetching posts: {error.message}</p>;
 
   return (
-    <FlexColumn gap={2}>
-      <h1>All Posts</h1>
+    <FlexColumn gap={2} padding={3}>
       {!posts || posts.length === 0 ? (
         <p>No posts available</p>
       ) : (

@@ -293,7 +293,9 @@ const NewPostCreator: React.FC = () => {
 
   return (
     <>
-      <Button onClick={onOpen}>Upload</Button>
+      <Button size='sm' onClick={onOpen}>
+        Upload
+      </Button>
       {isOpen && <ImageUploadModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
