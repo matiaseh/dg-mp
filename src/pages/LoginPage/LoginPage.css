@@ -1,4 +1,5 @@
 .flip-container {
+  margin-top: 2rem;
   perspective: 1000px;
 }
 
