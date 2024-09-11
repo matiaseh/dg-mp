@@ -54,17 +54,17 @@ const PostsList: React.FC<PostListProps> = ({ showOwnPosts }) => {
   if (error) return <p>Error fetching posts: {error.message}</p>;
 
   return (
-    <FlexColumn gap={2} padding={3}>
+    <SimpleGrid
+      margin={4}
+      columns={{ base: 1, sm: 2, md: 3, lg: 3 }}
+      spacing={4}
+    >
       {!posts || posts.length === 0 ? (
         <p>No posts available</p>
       ) : (
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 3, lg: 3 }} spacing={4}>
-          {posts.map(post => (
-            <ProductCard key={post._id} post={post} />
-          ))}
-        </SimpleGrid>
+        posts.map(post => <ProductCard key={post._id} post={post} />)
       )}
-    </FlexColumn>
+    </SimpleGrid>
   );
 };
 
