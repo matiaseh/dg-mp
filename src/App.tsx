@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import Home from './pages/HomePage/Home';
 import PrivateRoute from './utils/PrivateRoute';
 import styled from '@emotion/styled';
@@ -26,12 +31,16 @@ const AppRoutes: React.FC = () => {
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/verify/:token' element={<VerifyEmail />} />
+
         <Route path='/' element={<PrivateRoute />}>
           <Route element={<Layout />}>
             <Route path='' element={<Home />} />
             <Route path='profile' element={<Profile />} />
           </Route>
         </Route>
+
+        {/* Catch all unknown routes and redirect to home */}
+        <Route path='*' element={<Navigate to='/' />} />
       </Routes>
     </Container>
   );
