@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import {
   ACCESS_TOKEN_NAME,
@@ -6,7 +6,6 @@ import {
 } from '../../../constants/apiConstants';
 import { useQuery } from '@tanstack/react-query';
 import { SimpleGrid } from '@chakra-ui/react';
-import { FlexColumn } from '../../../components/FlexBox';
 import { Disc } from './NewPostCreator';
 import ProductCard from './ProductCard';
 
@@ -25,6 +24,7 @@ export interface Post {
 
 interface PostListProps {
   showOwnPosts?: boolean;
+  refreshKey?: any;
 }
 
 const fetchPosts = async (onlyOwn?: boolean) => {
@@ -40,15 +40,20 @@ const fetchPosts = async (onlyOwn?: boolean) => {
   return response.data;
 };
 
-const PostsList: React.FC<PostListProps> = ({ showOwnPosts }) => {
+const PostsList: React.FC<PostListProps> = ({ showOwnPosts, refreshKey }) => {
   const {
     data: posts,
     error,
     isLoading,
+    refetch,
   } = useQuery<Post[], Error>({
-    queryKey: ['posts'],
+    queryKey: ['posts', showOwnPosts],
     queryFn: () => fetchPosts(showOwnPosts),
   });
+
+  useEffect(() => {
+    refetch();
+  }, [refreshKey, refetch]);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching posts: {error.message}</p>;

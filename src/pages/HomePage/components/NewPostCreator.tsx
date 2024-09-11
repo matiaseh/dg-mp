@@ -43,7 +43,7 @@ export interface Disc {
   fade: number;
 }
 
-const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
+const PostCreatorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   isOpen,
   onClose,
 }) => {
@@ -154,7 +154,6 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      alert('Files uploaded successfully');
     } catch (err) {
       setUploadError('Failed to upload files');
     } finally {
@@ -288,7 +287,9 @@ const ImageUploadModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   );
 };
 
-const NewPostCreator: React.FC = () => {
+const NewPostCreator: React.FC<{ onPostCreated: () => void }> = ({
+  onPostCreated,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -296,7 +297,15 @@ const NewPostCreator: React.FC = () => {
       <Button size='sm' onClick={onOpen}>
         Upload
       </Button>
-      {isOpen && <ImageUploadModal isOpen={isOpen} onClose={onClose} />}
+      {isOpen && (
+        <PostCreatorModal
+          isOpen={isOpen}
+          onClose={() => {
+            onClose();
+            onPostCreated();
+          }}
+        />
+      )}
     </>
   );
 };
