@@ -32,7 +32,7 @@ const fetchPosts = async (onlyOwn?: boolean) => {
 
   const postsUrl = onlyOwn
     ? `${API_BASE_URL}/posts/me`
-    : `${API_BASE_URL}/posts/`;
+    : `${API_BASE_URL}/posts`;
 
   const response = await axios.get(postsUrl, {
     headers: { Authorization: `Bearer ${token}` },
@@ -49,6 +49,8 @@ const PostsList: React.FC<PostListProps> = ({ showOwnPosts, refreshKey }) => {
   } = useQuery<Post[], Error>({
     queryKey: ['posts', showOwnPosts],
     queryFn: () => fetchPosts(showOwnPosts),
+    staleTime: 60000,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
