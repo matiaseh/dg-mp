@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
 
   return (
     <Container>
-      <Button onClick={() => navigate('/home')}></Button>
+      <Button onClick={() => navigate('/')}></Button>
       <PostsList showOwnPosts={true} />
       <Button onClick={handleLogout}>Logout</Button>
     </Container>

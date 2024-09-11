@@ -74,7 +74,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
           ...prevState,
           successMessage: 'Login successful. Redirecting to home page..',
         }));
-        navigate('/home');
+        navigate('/');
         showError(null);
       }
     } catch (error) {

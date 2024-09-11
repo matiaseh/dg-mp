@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/HomePage/Home';
 import PrivateRoute from './utils/PrivateRoute';
 import styled from '@emotion/styled';
@@ -30,12 +25,8 @@ const AppRoutes: React.FC = () => {
   return (
     <Container>
       <Routes>
-        <Route
-          path='/'
-          element={isAuthenticated ? <Navigate to='/home' /> : <LoginPage />}
-        />
+        <Route path='/' element={isAuthenticated ? <Home /> : <LoginPage />} />
         <Route element={<PrivateRoute />}>
-          <Route path='home' element={<Home />} />
           <Route path='profile' element={<Profile />} />
         </Route>
         <Route path='/verify/:token' element={<VerifyEmail />} />
