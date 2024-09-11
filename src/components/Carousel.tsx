@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, Image, IconButton, Flex } from '@chakra-ui/react';
+import { Box, Image, IconButton, Flex, useDisclosure } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import ImageOverlay from './ImageOverlay';
 
 interface CarouselProps {
   images: string[];
 }
 
 const Carousel: React.FC<CarouselProps> = ({ images }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
@@ -38,6 +40,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         opacity={0.6}
         display={showPrev ? 'flex' : 'none'}
         isRound={true}
+        size='xs'
       />
       <IconButton
         aria-label='Next slide'
@@ -51,6 +54,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         opacity={0.6}
         display={showNext ? 'flex' : 'none'}
         isRound={true}
+        size='xs'
       />
       <Box>
         <Image
@@ -59,6 +63,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
           width='100%'
           height='auto'
           objectFit='contain'
+          onClick={onOpen}
         />
       </Box>
       {images.length > 1 && (
@@ -84,6 +89,11 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
           ))}
         </Flex>
       )}
+      <ImageOverlay
+        isOpen={isOpen}
+        onClose={onClose}
+        imageUrl={images[currentIndex]}
+      />
     </Box>
   );
 };
