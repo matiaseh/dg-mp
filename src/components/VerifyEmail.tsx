@@ -11,7 +11,7 @@ const RedirectLink = styled.span`
 `;
 
 const VerifyEmail = () => {
-  const { token } = useParams<{ token: string }>(); // Get the token from the URL
+  const { token } = useParams<{ token: string }>();
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
