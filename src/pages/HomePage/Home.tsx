@@ -21,9 +21,9 @@ const Home: React.FC = () => {
       >
         <NewPostCreator />
         <Button onClick={() => navigate('/profile')}>my profile</Button>
+        <Button onClick={handleLogout}>Logout</Button>
       </nav>
       <PostsList />
-      <Button onClick={handleLogout}>Logout</Button>
     </Container>
   );
 };
