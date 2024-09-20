@@ -65,7 +65,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ showError, flipCard }) => {
     };
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/user/login`, payload);
+      const response = await axios.post(`${API_BASE_URL}/user/login`, payload, {
+        withCredentials: true,
+      });
       if (response.status === 200) {
         const { token } = response.data;
         handleLogin(token);

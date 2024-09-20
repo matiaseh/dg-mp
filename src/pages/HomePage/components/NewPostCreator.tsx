@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import {
-  ACCESS_TOKEN_NAME,
-  API_BASE_URL,
-} from '../../../constants/apiConstants';
+import { API_BASE_URL } from '../../../constants/apiConstants';
 import {
   Box,
   Button,
@@ -32,6 +29,7 @@ import FlightNumberStack from './FlightNumberStack';
 import { CloseIcon } from '@chakra-ui/icons';
 import { FlexColumn, FlexRow } from '../../../components/FlexBox';
 import Carousel from '../../../components/Carousel';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export interface Disc {
   _id: string;
@@ -48,6 +46,7 @@ const PostCreatorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   onClose,
 }) => {
   const { discs } = useDiscs();
+  const { getAccessToken } = useAuth();
 
   const [search, setSearch] = useState<string>('');
   const [selectedDisc, setSelectedDisc] = useState<Disc | null>(null);
@@ -147,7 +146,7 @@ const PostCreatorModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
     formData.append('description', description);
 
     try {
-      const token = localStorage.getItem(ACCESS_TOKEN_NAME);
+      const token = await getAccessToken();
       await axios.post(`${API_BASE_URL}/posts/create`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',

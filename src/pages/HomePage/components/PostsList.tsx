@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import {
-  ACCESS_TOKEN_NAME,
-  API_BASE_URL,
-} from '../../../constants/apiConstants';
+import { API_BASE_URL } from '../../../constants/apiConstants';
 import { useQuery } from '@tanstack/react-query';
 import { SimpleGrid } from '@chakra-ui/react';
 import { Disc } from './NewPostCreator';
 import ProductCard from './ProductCard';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export interface Post {
   _id: string;
@@ -27,8 +25,11 @@ interface PostListProps {
   refreshKey?: any;
 }
 
-const fetchPosts = async (onlyOwn?: boolean) => {
-  const token = localStorage.getItem(ACCESS_TOKEN_NAME);
+const fetchPosts = async (
+  getAccessToken: () => Promise<string | null>,
+  onlyOwn?: boolean
+) => {
+  const token = await getAccessToken();
 
   const postsUrl = onlyOwn
     ? `${API_BASE_URL}/posts/me`
@@ -41,6 +42,7 @@ const fetchPosts = async (onlyOwn?: boolean) => {
 };
 
 const PostsList: React.FC<PostListProps> = ({ showOwnPosts, refreshKey }) => {
+  const { getAccessToken } = useAuth();
   const {
     data: posts,
     error,
@@ -48,7 +50,7 @@ const PostsList: React.FC<PostListProps> = ({ showOwnPosts, refreshKey }) => {
     refetch,
   } = useQuery<Post[], Error>({
     queryKey: ['posts', showOwnPosts],
-    queryFn: () => fetchPosts(showOwnPosts),
+    queryFn: () => fetchPosts(getAccessToken, showOwnPosts),
     staleTime: 60000,
     refetchOnWindowFocus: false,
   });
